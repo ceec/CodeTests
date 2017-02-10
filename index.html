@@ -1,0 +1,137 @@
+<html>
+<head>
+
+<script type="text/javascript">
+var myMoves = [
+ "R1", "L3", "R5", "R5", "R5", "L4", "R5", "R1", "R2", "L1", "L1", "R5", "R1", "L3", "L5", "L2", "R4", "L1", "R4", "R5", "L3", "R5", "L1", "R3", "L5", "R1", "L2", "R1", "L5", "L1", "R1", "R4", "R1", "L1", "L3", "R3", "R5", "L3", "R4", "L4", "R5", "L5", "L1", "L2", "R4", "R3", "R3", "L185", "R3", "R4", "L5", "L4", "R48", "R1", "R2", "L1", "R1", "L4", "L4", "R77", "R5", "L2", "R192", "R2", "R5", "L4", "L5", "L3", "R2", "L4", "R1", "L5", "R5", "R4", "R1", "R2", "L3", "R4", "R4", "L2", "L4", "L3", "R5", "R4", "L2", "L1", "L3", "R1", "R5", "R5", "R2", "L5", "L2", "L3", "L4", "R2", "R1", "L4", "L1", "R1", "R5", "R3", "R3", "R4", "L1", "L4", "R1", "L2", "R3", "L3", "L2", "L1", "L2", "L2", "L1", "L2", "R3", "R1", "L4", "R1", "L1", "L4", "R1", "L2", "L5", "R3", "L5", "L2", "L2", "L3", "R1", "L4", "R1", "R1", "R2", "L1", "L4", "L4", "R2", "R2", "R2", "R2", "R5", "R1", "L1", "L4", "L5", "R2", "R4", "L3", "L5", "R2", "R3", "L4", "L1", "R2", "R3", "R5", "L2", "L3", "R3", "R1", "R3"
+ ];
+ 
+//set starting point on grid system at 0,0
+var myCoordinates = [0,0];
+//set current direction
+//0 = North
+//90 = East
+//180 = South
+//270 = West
+var myDirection = 0; //start facing north
+var holder = null;
+var myCurrentX = 0;
+var myCurrentY = 0;
+
+
+ //Attempt 1
+ //On each loop of moves array, fetch current coordinates and current direction
+ //Report it to the div id=myMoves
+function doThis(){
+ 	 for (var i=0; i<myMoves.length; i++)
+	 { 
+		myNumberOfSteps = myMoves[i].substr(1,1);
+		myMoveDirectionText = myMoves[i].substr(0,1);
+		//console.log(changeDirection(myMoves[i].substr(0,1), myDirection));
+		myMoveDirection = changeDirection(myMoveDirectionText, myDirection);
+
+		//calculate coordinate changeDirection
+		alert('hello');
+		myCoordinates = myCoordinateAdjuster(myCurrentX, myCurrentY, myDirection, myMoveDirection, myNumberOfSteps);
+		
+		console.log('direction: ' + myMoveDirectionText);
+		console.log('steps:' + myNumberOfSteps);
+		console.log('move direction: ' + myMoveDirection);
+		console.log('coordinates:' + myCoordinates);
+	 }
+	 
+	 function changeDirection(myMoveDirection, myCurrentDirection)
+	 {
+			switch (myMoveDirection){
+			   case "L":
+				   myCurrentDirection = myCurrentDirection - 90;
+				   if(myCurrentDirection<0){
+				   myCurrentDirection = 360 + myCurrentDirection;
+				   }
+				  break;
+			   case "R":
+				   myCurrentDirection = myCurrentDirection + 90;
+				    if(myCurrentDirection>=360){
+				   myCurrentDirection = 0;
+				   }
+				  break;
+			   default:
+				  myCurrentDirection = 0;
+			}
+		return myCurrentDirection;
+	} 
+	
+	function myCoordinateAdjuster(myCurrentX, myCurrentY, myCurrentDirection, myMoveDirectionText, myNumberOfSteps)
+	{
+	alert('hello');
+	alert(myCurrentDirection);
+		//if myCurrentDirection = 0 - north
+		//R adds 1 to X
+		//L subtracts 1 from X
+		switch (myCurrentDirection){
+			case "0":
+				if(myMoveDirection = "L"){			
+					myCurrentX = myCurrentX - myNumberOfSteps;
+				} 
+				else
+				{
+					myCurrentX = myCurrentX + myNumberOfSteps;
+					alert('0R');
+				}
+			break;
+			case "90":
+				if(myMoveDirection = "L")
+				{
+					myCurrentY = myCurrentY + myNumberOfSteps;
+				}
+				else
+				{
+					myCurrentY = mycurrentY - myNumberOfSteps;
+					alert('90R');
+				}
+			break;
+			case "180":
+				if(myMoveDirection = "L")
+				{
+					myCurrentX = myCurrentX + myNumberOfSteps;
+				}
+				else
+				{
+					myCurrentX = myCurrentX - myNumberOfSteps;
+				}
+			break;
+			case "270":
+				if(myMoveDirection = "L")
+				{
+					myCurrentY = myCurrentY - myNumberOfSteps;
+				}
+				else
+				{
+					myCurrentY = myCurrentY + myNumberOfSteps;
+				}
+			
+			break;
+			default:
+				//set coordinates back to 0,0 if myCurrentDirection 
+				//gets messed upper-alpha
+				myCurrentX = 0;
+				myCurrentY = 0;
+		}//end myCurrentDirection switch
+		
+		return myCurrentX + ',' + myCurrentY;
+	
+	}
+}// onLoad()
+
+ 
+ 
+ </script>
+ </head>
+ <body onload="doThis()">
+ <h1>Moves</h1>
+ <div id="myMoves">
+ </div>
+ 
+ 
+ </body>
+ 
