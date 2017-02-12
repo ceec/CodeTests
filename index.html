@@ -1,47 +1,59 @@
+<!DOCTYPE html>
 <html>
-<head>
-
-<script type="text/javascript">
-var myMoves = [
- "R1", "L3", "R5", "R5", "R5", "L4", "R5", "R1", "R2", "L1", "L1", "R5", "R1", "L3", "L5", "L2", "R4", "L1", "R4", "R5", "L3", "R5", "L1", "R3", "L5", "R1", "L2", "R1", "L5", "L1", "R1", "R4", "R1", "L1", "L3", "R3", "R5", "L3", "R4", "L4", "R5", "L5", "L1", "L2", "R4", "R3", "R3", "L185", "R3", "R4", "L5", "L4", "R48", "R1", "R2", "L1", "R1", "L4", "L4", "R77", "R5", "L2", "R192", "R2", "R5", "L4", "L5", "L3", "R2", "L4", "R1", "L5", "R5", "R4", "R1", "R2", "L3", "R4", "R4", "L2", "L4", "L3", "R5", "R4", "L2", "L1", "L3", "R1", "R5", "R5", "R2", "L5", "L2", "L3", "L4", "R2", "R1", "L4", "L1", "R1", "R5", "R3", "R3", "R4", "L1", "L4", "R1", "L2", "R3", "L3", "L2", "L1", "L2", "L2", "L1", "L2", "R3", "R1", "L4", "R1", "L1", "L4", "R1", "L2", "L5", "R3", "L5", "L2", "L2", "L3", "R1", "L4", "R1", "R1", "R2", "L1", "L4", "L4", "R2", "R2", "R2", "R2", "R5", "R1", "L1", "L4", "L5", "R2", "R4", "L3", "L5", "R2", "R3", "L4", "L1", "R2", "R3", "R5", "L2", "L3", "R3", "R1", "R3"
- ];
- 
-//set starting point on grid system at 0,0
-var myCoordinates = [0,0];
-//set current direction
-//0 = North
-//90 = East
-//180 = South
-//270 = West
-var myDirection = 0; //start facing north
-var holder = null;
-var myCurrentX = 0;
-var myCurrentY = 0;
-
-
- //Attempt 1
- //On each loop of moves array, fetch current coordinates and current direction
- //Report it to the div id=myMoves
-function doThis(){
- 	 for (var i=0; i<myMoves.length; i++)
-	 { 
-		myNumberOfSteps = myMoves[i].substr(1,1);
-		myMoveDirectionText = myMoves[i].substr(0,1);
-		//console.log(changeDirection(myMoves[i].substr(0,1), myDirection));
-		myMoveDirection = changeDirection(myMoveDirectionText, myDirection);
-
-		//calculate coordinate changeDirection
-		alert('hello');
-		myCoordinates = myCoordinateAdjuster(myCurrentX, myCurrentY, myDirection, myMoveDirection, myNumberOfSteps);
-		
-		console.log('direction: ' + myMoveDirectionText);
-		console.log('steps:' + myNumberOfSteps);
-		console.log('move direction: ' + myMoveDirection);
-		console.log('coordinates:' + myCoordinates);
-	 }
+	<head>
+	<script type="text/javascript">
+	//Input array provided where 1st char is direction (L or R)
+	//and 2nd char is number of steps (999)
+	var myMoves = [
+	 "R1", "L3", "R5", "R5", "R5", "L4", "R5", "R1", "R2", "L1", "L1", "R5", "R1", "L3", "L5", "L2", "R4", "L1", "R4", "R5", "L3", "R5", "L1", "R3", "L5", "R1", "L2", "R1", "L5", "L1", "R1", "R4", "R1", "L1", "L3", "R3", "R5", "L3", "R4", "L4", "R5", "L5", "L1", "L2", "R4", "R3", "R3", "L185", "R3", "R4", "L5", "L4", "R48", "R1", "R2", "L1", "R1", "L4", "L4", "R77", "R5", "L2", "R192", "R2", "R5", "L4", "L5", "L3", "R2", "L4", "R1", "L5", "R5", "R4", "R1", "R2", "L3", "R4", "R4", "L2", "L4", "L3", "R5", "R4", "L2", "L1", "L3", "R1", "R5", "R5", "R2", "L5", "L2", "L3", "L4", "R2", "R1", "L4", "L1", "R1", "R5", "R3", "R3", "R4", "L1", "L4", "R1", "L2", "R3", "L3", "L2", "L1", "L2", "L2", "L1", "L2", "R3", "R1", "L4", "R1", "L1", "L4", "R1", "L2", "L5", "R3", "L5", "L2", "L2", "L3", "R1", "L4", "R1", "R1", "R2", "L1", "L4", "L4", "R2", "R2", "R2", "R2", "R5", "R1", "L1", "L4", "L5", "R2", "R4", "L3", "L5", "R2", "R3", "L4", "L1", "R2", "R3", "R5", "L2", "L3", "R3", "R1", "R3"
+	 ];
 	 
-	 function changeDirection(myMoveDirection, myCurrentDirection)
-	 {
+	//set current direction
+	//0 = North
+	//90 = East
+	//180 = South
+	//270 = West
+	var myDirection = 0; //start facing north
+	//set X and Y coordinates to 0,0
+	var myCurrentX = 0;
+	var myCurrentY = 0;
+	//set empty output for HTML div concatenation
+	var myHTMLOutput = "";
+
+	//Onload function
+	function doThis(){
+		for (var i=0; i<myMoves.length; i++)
+		{
+			//get number of steps from each array string value
+			myNumberOfSteps = parseInt(myMoves[i].substr(1,myMoves[i].length-1));
+			//get direction of move from each array string value
+			myMoveDirectionText = myMoves[i].substr(0,1);
+			
+			//calculate coordinate changeDirection
+			myCoordinates = myCoordinateAdjuster(myCurrentX, myCurrentY, myDirection, myMoveDirectionText, myNumberOfSteps);
+			myCurrentX = myCoordinates.x;
+			myCurrentY = myCoordinates.y;
+			
+			//Increment move counter for HTML output
+			moveCounter = i+1;
+			
+			//Build output text string of move number, move direction, number of steps, and post move x and y coordinates
+			var myOutputText = 'Move #: ' + moveCounter + ' Direction: ' + myMoveDirectionText + " " + myNumberOfSteps + ' Number of Steps ' + ' Post-Move Coordinates: [' + myCoordinates.x + ', ' + myCoordinates.y + ']' + '<br/>';
+						
+			//Append move info to HTML output string on each array value iteration
+			myHTMLOutput = myHTMLOutput + myOutputText;
+			
+			//Call function to process direction pointer for this iteration
+			//passing in the move direction text and the current direction
+			myDirection = changeDirection(myMoveDirectionText, myDirection);
+		}//end myMoves array loop
+		 
+		//append final HTML to myMoves div
+		document.getElementById('myMoves').innerHTML = myHTMLOutput;
+		 
+		//changeDirection is a function which takes the direction of the move and the current direction and calculates which way to rotate the player
+		function changeDirection(myMoveDirection, myCurrentDirection)
+		 {
 			switch (myMoveDirection){
 			   case "L":
 				   myCurrentDirection = myCurrentDirection - 90;
@@ -51,87 +63,82 @@ function doThis(){
 				  break;
 			   case "R":
 				   myCurrentDirection = myCurrentDirection + 90;
-				    if(myCurrentDirection>=360){
+					if(myCurrentDirection>=360){
 				   myCurrentDirection = 0;
 				   }
 				  break;
 			   default:
 				  myCurrentDirection = 0;
 			}
-		return myCurrentDirection;
-	} 
-	
-	function myCoordinateAdjuster(myCurrentX, myCurrentY, myCurrentDirection, myMoveDirectionText, myNumberOfSteps)
-	{
-	alert('hello');
-	alert(myCurrentDirection);
-		//if myCurrentDirection = 0 - north
-		//R adds 1 to X
-		//L subtracts 1 from X
-		switch (myCurrentDirection){
-			case "0":
-				if(myMoveDirection = "L"){			
-					myCurrentX = myCurrentX - myNumberOfSteps;
-				} 
-				else
-				{
-					myCurrentX = myCurrentX + myNumberOfSteps;
-					alert('0R');
-				}
-			break;
-			case "90":
-				if(myMoveDirection = "L")
-				{
-					myCurrentY = myCurrentY + myNumberOfSteps;
-				}
-				else
-				{
-					myCurrentY = mycurrentY - myNumberOfSteps;
-					alert('90R');
-				}
-			break;
-			case "180":
-				if(myMoveDirection = "L")
-				{
-					myCurrentX = myCurrentX + myNumberOfSteps;
-				}
-				else
-				{
-					myCurrentX = myCurrentX - myNumberOfSteps;
-				}
-			break;
-			case "270":
-				if(myMoveDirection = "L")
-				{
-					myCurrentY = myCurrentY - myNumberOfSteps;
-				}
-				else
-				{
-					myCurrentY = myCurrentY + myNumberOfSteps;
-				}
-			
-			break;
-			default:
-				//set coordinates back to 0,0 if myCurrentDirection 
-				//gets messed upper-alpha
-				myCurrentX = 0;
-				myCurrentY = 0;
-		}//end myCurrentDirection switch
+			return myCurrentDirection;//return degrees
+		} 
 		
-		return myCurrentX + ',' + myCurrentY;
-	
-	}
-}// onLoad()
-
+		//myCoordinateAdjuster is a function which takes the player's current X and Y coordinates, current direction, the direction of the new move as well as the number of steps and adjusts the X,Y coordinates to adjust for the move parameters
+		function myCoordinateAdjuster(myCurrentX, myCurrentY, myDirection, myMoveDirectionText, myNumberOfSteps)
+		{
+			switch (myDirection){
+				case 0:
+					if(myMoveDirectionText === "L"){			
+						myCurrentX = myCurrentX - myNumberOfSteps;
+					} 
+					else
+					{
+						myCurrentX = myCurrentX + myNumberOfSteps;
+					}
+					alert('north: ' + myCurrentX + '' + myCurrentY);
+				break;
+				case 90:
+					if(myMoveDirectionText === "L")
+					{
+						myCurrentY = myCurrentY + myNumberOfSteps;
+					}
+					else
+					{
+						myCurrentY = myCurrentY - myNumberOfSteps;
+					}
+				break;
+				case 180:
+					if(myMoveDirectionText === "L")
+					{
+						myCurrentX = myCurrentX + myNumberOfSteps;
+					}
+					else
+					{
+						myCurrentX = myCurrentX - myNumberOfSteps;
+					}
+				break;
+				case 270:
+					if(myMoveDirectionText === "L")
+					{
+						myCurrentY = myCurrentY - myNumberOfSteps;
+					}
+					else
+					{
+						myCurrentY = myCurrentY + myNumberOfSteps;
+					}
+				
+				break;
+				default:
+					//set coordinates back to 0,0 if myCurrentDirection 
+					//gets messed up
+					alert('whoops');
+					myCurrentX = 0;
+					myCurrentY = 0;
+			}//end myCurrentDirection switch
+			
+			var myCurrentXAndY = {
+			x: myCurrentX,
+			y: myCurrentY
+			};
+			return myCurrentXAndY;
+		}//end myCoordinateAdjuster()
+	}// onLoad()
+	 </script>
+	 </head>
  
- 
- </script>
- </head>
- <body onload="doThis()">
- <h1>Moves</h1>
- <div id="myMoves">
- </div>
- 
- 
- </body>
+	<body onload="doThis()">
+		<h1>Moves</h1>
+		<div id="myMoves"></div>
+	</body>
+ </html>
  
